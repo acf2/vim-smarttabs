@@ -123,12 +123,18 @@ fun! s:InsertSmartTab()
       exe 'return '.g:ctab_hook
     endif
     return "\<Tab>"
-  endif
+  else
+    if exists('b:ctab_nonempty_hook') && b:ctab_nonempty_hook != ''
+      exe 'return '.b:ctab_nonempty_hook
+    elseif exists('g:ctab_nonempty_hook') && g:ctab_nonempty_hook != ''
+      exe 'return '.g:ctab_nonempty_hook
+    endif
 
-  let sts=GetSoftTabStop()
-  let sp=(virtcol('.') % sts)
-  if sp==0 | let sp=sts | endif
-  return strpart("                  ",0,1+sts-sp)
+    let sts=GetSoftTabStop()
+    let sp=(virtcol('.') % sts)
+    if sp==0 | let sp=sts | endif
+    return strpart("                  ",0,1+sts-sp)
+  endif
 endfun
 
 fun! s:CheckLeaveLine(line)
